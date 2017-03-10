@@ -1,6 +1,27 @@
 {% extends "layout.html" %}
-{% block title %}Home Page{% endblock %}
+{% block title %}Welcome to {% endblock %}
 {% block content %}
-    < h1 >Welcome</h1>
-    <p>This is the home page.</p>
+<br /><br />
+    <div class="jumbotron">
+      <h1>Etsy-Plask</h1>
+        <p>An awesome etsy clone!</p>
+      <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a></p>
+    </div>
+    <br >
+    <div class="center">
+        <div class="row">
+        {% for x in listings %}
+            <div class="col-md-3">
+                <div class="thumbnail">
+                    <div class="caption">
+                        <h3><a href="{{ url_for('listing_show', listing_id=x.id) }}">{{ x.name }}</a></h1>
+                        <p>{{ x.description[:25] }}</p>
+                        <p>{{ x.price }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+    <br /><br />
 {% endblock %}

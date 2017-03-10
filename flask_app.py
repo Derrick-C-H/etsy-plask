@@ -1,26 +1,12 @@
-from flask import Flask, render_template
-APP = Flask(__name__)
-
-@APP.route('/')
-def home():
-    return render_template('index.html')
-
-@APP.route('/about')
-def about():
-    return render_template('about.html')
-@APP.route('/contact')
-def contact():
-    return render_template('contact.html')
-
 from flask import Flask, render_template, request, flash, abort
 from flask_sqlalchemy import SQLAlchemy
 from wtforms import Form, StringField, DecimalField, TextAreaField
 from wtforms.validators import DataRequired
 
-APP = Flask(__name__)
-APP.secret_key = 'happypuppy73'
-APP.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////home/ajhenley/sites/etsydemo/tmp/database.db'
-db = SQLAlchemy(APP)
+app = Flask(__name__)
+app.secret_key = 'happypuppy73'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////home/ajhenley/sites/etsydemo/tmp/database.db'
+db = SQLAlchemy(app)
 
 class Listing(db.Model):
     __tablename__ = "listing"
@@ -34,12 +20,12 @@ class ListingForm(Form):
     description = TextAreaField('Description', validators=[DataRequired()])
     price = DecimalField('Price', validators=[DataRequired()])
 
-@APP.route('/')
+@app.route('/')
 def index():
     results = Listing.query.filter(1==1).all()
     return render_template('index.html', listings=results)
 
-@APP.route('/listing/new', methods=['GET','POST'])
+@app.route('/listing/new', methods=['GET','POST'])
 def newlisting():
     form = ListingForm(request.form)
     if request.method == 'POST':
@@ -56,7 +42,7 @@ def newlisting():
         return render_template('newlisting.html', form=form)
 
 
-@APP.route('/listing/show/<listing_id>')
+@app.route('/listing/show/<listing_id>')
 def listing_show(listing_id):
     try:
         lst = Listing.query.get(listing_id)
@@ -65,7 +51,7 @@ def listing_show(listing_id):
 
     return render_template('listing_show.html', list_id=lst.id, listing=lst)
 
-@APP.route('/listing/edit/<listing_id>', methods=['GET','POST'])
+@app.route('/listing/edit/<listing_id>', methods=['GET','POST'])
 def listing_edit(listing_id):
     form = ListingForm(request.form)
     if request.method == 'POST':
@@ -88,10 +74,10 @@ def listing_edit(listing_id):
           abort(404)
         return render_template('listing_edit.html', form=lstForm)
 
-@APP.route('/about')
+@app.route('/about')
 def about():
     return render_template('about.html')
 
-@APP.route('/contact')
+@app.route('/contact')
 def contact():
     return render_template('contact.html')
